@@ -12,6 +12,7 @@
     <main>
     <h1>Vanilla JavaScript App</h1>
     <p>Loading content from the API: <b id="bname">...</b></p>
+    <p id="dname"></p>
     </main>
 
     <script>
@@ -20,7 +21,14 @@
         //    document.querySelector('#name').textContent = text;
         //}());
 
-        const url = 'https://icy-island-0334f6b00.2.azurestaticapps.net/api/HttpSendMailTrigger';
+        
+
+        
+// Call start
+(async() => {
+  await alert('before start');
+
+  const url = 'https://icy-island-0334f6b00.2.azurestaticapps.net/api/HttpSendMailTrigger';
         const data = '{"name" : "Arun Sharma"}';
         const response = await fetch(url, {
             method: 'POST',
@@ -33,8 +41,10 @@
         const text = await response.text();
         //document.querySelector('#name').textContent = text;
         document.getElementById('bname').innerHTML = text;
-        document.getElementById('bname').innerHTML = "Suri";
-        alert("function ended");
+        await alert("function ended");
+        document.getElementById('dname').innerHTML = "Suri";
+        
+    })();
     </script>
 </body>
 
