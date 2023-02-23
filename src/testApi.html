@@ -15,10 +15,23 @@
     </main>
 
     <script>
-    (async function() {
-        const { text } = await( await fetch('/api/HttpSendMailTrigger?Name="Arun Sharma"')).json();
+        //(async function() {
+        //    const { text } = await( await fetch('/api/HttpSendMailTrigger?Name=Arun Sharma')).json();
+        //    document.querySelector('#name').textContent = text;
+        //}());
+
+        const url = 'https://icy-island-0334f6b00.2.azurestaticapps.net/api/HttpSendMailTrigger';
+        const data = '{"name" : "Arun Sharma"}';
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: data,
+        });
+
+        const text = await response.text();
         document.querySelector('#name').textContent = text;
-    }());
     </script>
 </body>
 
