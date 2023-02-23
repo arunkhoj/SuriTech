@@ -52,8 +52,8 @@ namespace SuriTech.Function
     log.LogInformation("C# HTTP trigger function processed a request.");
  
     // 1: Get request body + validate required content is available
-    var fromEmail = req.Query["fromEmail"];
-    var message = req.Query["message"];
+    // var fromEmail = req.Query["fromEmail"];
+    // var message = req.Query["message"];
     // var missingFields = new List<string>();
     // if(postData["fromEmail"] == null)
     //     missingFields.Add("fromEmail");
@@ -66,28 +66,29 @@ namespace SuriTech.Function
     //     return req.CreateResponse(HttpStatusCode.BadRequest, $"Missing field(s): {missingFieldsSummary}");
     // }
  
-    // 2: Site settings
-    var smtpHost = "smtp.office365.com";
-    var smtpPort = Convert.ToInt32("587");
-    var smtpEnableSsl = Boolean.Parse("True");
-    var smtpUser = "support@suritechs.com";
-    var smtpPass = "Me@hochiminh2023";
-    var toEmail = "arunkhoj@gmail.com";
- 
-    // 3: Build + Send the email
-    MailMessage mailObj = new MailMessage("arunkhoj@gmail.com", toEmail, "Site Contact Form", "I wish to join");
-    SmtpClient client = new SmtpClient();
-    client.Host = smtpHost;
-    client.Port = smtpPort;
-    client.EnableSsl = smtpEnableSsl;
-    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-    client.UseDefaultCredentials = false;
-    client.Credentials = new System.Net.NetworkCredential(smtpUser, smtpPass);
- 
- 
+    String userName = "support@suritechs.com";
+    String password = "Me@hochiminh2023";
+    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
     try
     {
-        client.Send(mailObj);
+        var message = new MailMessage
+{
+    From = new MailAddress("support@suritechs.com", "Suri Support"),
+    Body = "Simple mail",
+    Subject = "Test mail",
+    To = { "arunkhoj@gmail.com" }
+            };
+
+using (var client = new SmtpClient())
+{
+    client.EnableSsl = true;
+    client.Host = "smtp.office365.com";
+    client.Port = 587;
+    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+    client.Credentials = new NetworkCredential(userName, password);
+
+    await client.SendMailAsync(message);
+}
         string responseMessage = HttpStatusCode.OK.ToString();
         return new OkObjectResult(responseMessage);
         //return req.CreateResponse(HttpStatusCode.OK, "Thanks!");
@@ -102,5 +103,6 @@ namespace SuriTech.Function
         // });
     }
 }
+
     }
 }
