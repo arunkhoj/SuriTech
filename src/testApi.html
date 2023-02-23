@@ -12,12 +12,11 @@
     <main>
     <h1>Vanilla JavaScript App</h1>
     <p>Loading content from the API: <b id="bname">...</b></p>
-    <p id="dname"></p>
     </main>
 
     <script>
         //(async function() {
-        //    const { text } = await( await fetch('/api/HttpSendMailTrigger?Name=Arun Sharma')).json();
+        //    const { text } = await( await fetch('/api/HttpSendMailTrigger')).json();
         //    document.querySelector('#name').textContent = text;
         //}());
 
@@ -38,11 +37,8 @@
             body: data,
         });
 
-        const text = await response.text();
-        //document.querySelector('#name').textContent = text;
-        document.getElementById('bname').innerHTML = text;
-        await alert("function ended");
-        document.getElementById('dname').innerHTML = "Suri";
+        //const text = await response.text();
+        document.getElementById('bname').innerHTML = text;      
         
     })();
     </script>
