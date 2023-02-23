@@ -11,7 +11,7 @@
 <body>
     <main>
     <h1>Vanilla JavaScript App</h1>
-    <p>Loading content from the API: <b id="name">...</b></p>
+    <p>Loading content from the API: <b id="bname">...</b></p>
     </main>
 
     <script>
@@ -31,7 +31,8 @@
         });
 
         const text = await response.text();
-        document.querySelector('#name').textContent = text;
+        //document.querySelector('#name').textContent = text;
+        document.getElementById('bname').innerHTML = text;
     </script>
 </body>
 
