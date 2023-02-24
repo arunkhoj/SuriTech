@@ -1,27 +1,13 @@
 using System;
-using System.IO;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
-
-using System.Net;
-using System.Net.Mail;
-using System.Collections.Generic;
-// namespace SuriTech.Function
-// {
-//     public static class HttpSendMailTrigger
-//     {
-//         [FunctionName("HttpSendMailTrigger")]
-//         public static async Task<IActionResult> Run(
-//             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-//             ILogger log)
-//         {
-//             log.LogInformation("C# HTTP trigger function processed a request.");
 
 //             string name = req.Query["name"];
 
@@ -34,9 +20,7 @@ using System.Collections.Generic;
 //                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
 //             return new OkObjectResult(responseMessage);
-//         }
-//     }
-// }
+
 
 
 
@@ -45,64 +29,50 @@ namespace SuriTech.Function
     public static class HttpSendMailTrigger
     {
         [FunctionName("HttpSendMailTrigger")]
- public static async Task<IActionResult> Run(
+        public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
-{
-    log.LogInformation("C# HTTP trigger function processed a request.");
- 
-    // 1: Get request body + validate required content is available
-    // var fromEmail = req.Query["fromEmail"];
-    // var message = req.Query["message"];
-    // var missingFields = new List<string>();
-    // if(postData["fromEmail"] == null)
-    //     missingFields.Add("fromEmail");
-    // if(postData["message"] == null)
-    //     missingFields.Add("message");
-    
-    // if(missingFields.Any())
-    // {
-    //     var missingFieldsSummary = String.Join(", ", missingFields);
-    //     return req.CreateResponse(HttpStatusCode.BadRequest, $"Missing field(s): {missingFieldsSummary}");
-    // }
- 
-    String userName = "support@suritechs.com";
-    String password = "Me@hochiminh2023";
-    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-    try
-    {
-        var message = new MailMessage
-{
-    From = new MailAddress("support@suritechs.com", "Suri Support"),
-    Body = "Simple mail",
-    Subject = "Test mail",
-    To = { "arunkhoj@gmail.com" }
-            };
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
 
-using (var client = new SmtpClient())
-{
-    client.EnableSsl = true;
-    client.Host = "smtp.office365.com";
-    client.Port = 587;
-    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-    client.Credentials = new NetworkCredential(userName, password);
+            //Credentials
+            String userName = "support@suritechs.com";
+            String password = "Me@hochiminh2023";
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            try
+            {
+                //Parameters
+                String fromEmail = req.Query["from"]; //Sender
+                String bodyEmail = req.Query["body"]; //Notes
+                String subjectEmail = req.Query["subject"]; //"SuriTech Website-Enquiry"
+                String toEmail = req.Query["to"]; //To Email
+                var message = new MailMessage
+                {
+                    From = new MailAddress(fromEmail, subjectEmail),
+                    Body = bodyEmail,
+                    Subject = subjectEmail,
+                    To = { toEmail }
+                };
 
-    await client.SendMailAsync(message);
-}
-        string responseMessage = HttpStatusCode.OK.ToString();
-        return new OkObjectResult(responseMessage);
-        //return req.CreateResponse(HttpStatusCode.OK, "Thanks!");
-    }
-    catch (Exception ex)
-    {
-        string responseMessage = HttpStatusCode.InternalServerError.ToString();
-        return new OkObjectResult($"Email has not been sent: {ex.GetType()}" + responseMessage);
-        // return req.CreateResponse(HttpStatusCode.InternalServerError, new {
-        //     status = false,
-        //     message = $"Email has not been sent: {ex.GetType()}"            
-        // });
-    }
-}
+                using (var client = new SmtpClient())
+                {
+                    client.EnableSsl = true;
+                    client.Host = "smtp.office365.com";
+                    client.Port = 587;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.Credentials = new NetworkCredential(userName, password);
+
+                    await client.SendMailAsync(message);
+                }
+                string responseMessage = HttpStatusCode.OK.ToString() + "Thanks!";
+                return new OkObjectResult(responseMessage);
+            }
+            catch (Exception ex)
+            {
+                string responseMessage = HttpStatusCode.InternalServerError.ToString();
+                return new OkObjectResult($"Email has not been sent: {ex.GetType()}" + responseMessage);               
+            }
+        }
 
     }
 }
