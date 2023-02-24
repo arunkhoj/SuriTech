@@ -24,11 +24,29 @@
 
         
 // Call start
-(async() => {
-  await alert('before start');
+// (async() => {
+//   await alert('before start');
 
-  const url = 'https://icy-island-0334f6b00.2.azurestaticapps.net/api/HttpSendMailTrigger';
-        const data = '{"name" : "Arun Sharma"}';
+//   const url = 'https://icy-island-0334f6b00.2.azurestaticapps.net/api/HttpSendMailTrigger';
+//         const data = '{"name" : "Arun Sharma"}';
+//         const response = await fetch(url, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: data,
+//         });
+
+//         //const text = await response.text();
+//         document.getElementById('bname').innerHTML = text;      
+        
+//     })();
+
+    //mail code
+    (async() => { 
+
+  const url = 'https://icy-island-0334f6b00.2.azurestaticapps.net/api/HttpSendMailTrigger?from=${frm}&id=${uid}';
+        const data = '{"from" : "arunkhoj@gmail.com", "body" : "Arun Sharma, 9167762010", "to" : "arun@suritechs.com", "subject" : "SuriTech Website-Enquiry"}';
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -40,7 +58,7 @@
         //const text = await response.text();
         document.getElementById('bname').innerHTML = text;      
         
-    })();
+    })();    
     </script>
 </body>
 
