@@ -7,6 +7,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using Newtonsoft.Json;
 
 
 //             string name = req.Query["name"];
@@ -71,6 +73,100 @@ namespace SuriTech.Function
             {
                 string responseMessage = HttpStatusCode.InternalServerError.ToString();
                 return new OkObjectResult($"Email has not been sent: {ex.GetType()}" + responseMessage);               
+            }
+        }
+
+        [FunctionName("Sample1")]
+        public static async Task<IActionResult> Sample3(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
+
+            
+            try
+            {
+                string name = req.Query["name"];
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                dynamic data = JsonConvert.DeserializeObject(requestBody);
+                name = name ?? data?.name;
+
+                string responseMessage = string.IsNullOrEmpty(name)
+                    ? "This HTTP triggered function Sample1 executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                    : $"Hello, {name}. This HTTP triggered function executed successfully.";
+
+                return new OkObjectResult(responseMessage);    
+                
+            }
+            catch (Exception ex)
+            {
+                string responseMessage = HttpStatusCode.InternalServerError.ToString();
+                return new OkObjectResult($"Some issue Sample1: {ex.GetType()}" + responseMessage);               
+            }
+        }
+
+    }
+
+    public static class SampleSuriTech
+    {
+        [FunctionName("Sample1")]
+        public static async Task<IActionResult> Sample1(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
+
+            
+            try
+            {
+                string name = req.Query["name"];
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                dynamic data = JsonConvert.DeserializeObject(requestBody);
+                name = name ?? data?.name;
+
+                string responseMessage = string.IsNullOrEmpty(name)
+                    ? "This HTTP triggered function Sample1 executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                    : $"Hello, {name}. This HTTP triggered function executed successfully.";
+
+                return new OkObjectResult(responseMessage);    
+                
+            }
+            catch (Exception ex)
+            {
+                string responseMessage = HttpStatusCode.InternalServerError.ToString();
+                return new OkObjectResult($"Some issue Sample1: {ex.GetType()}" + responseMessage);               
+            }
+        }
+
+        [FunctionName("Sample2")]
+        public static async Task<IActionResult> Sample2(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
+
+            
+            try
+            {
+                string name = req.Query["name"];
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                dynamic data = JsonConvert.DeserializeObject(requestBody);
+                name = name ?? data?.name;
+
+                string responseMessage = string.IsNullOrEmpty(name)
+                    ? "This HTTP triggered function Sample2 executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                    : $"Hello, {name}. This HTTP triggered function executed successfully.";
+
+                return new OkObjectResult(responseMessage);    
+                
+            }
+            catch (Exception ex)
+            {
+                string responseMessage = HttpStatusCode.InternalServerError.ToString();
+                return new OkObjectResult($"Some issue Sample2: {ex.GetType()}" + responseMessage);               
             }
         }
 
