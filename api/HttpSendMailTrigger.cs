@@ -28,147 +28,63 @@ using Newtonsoft.Json;
 
 namespace SuriTech.Function
 {
-    public static class HttpSendMailTrigger
+    // public static class HttpSendMailTrigger
+    // {
+    //     [FunctionName("HttpSendMailTrigger")]
+    //     public static async Task<IActionResult> Run(
+    //         [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+    //         ILogger log)
+    //     {
+    //         log.LogInformation("C# HTTP trigger function processed a request.");
+
+    //         //Credentials
+    //         String userName = "support@suritechs.com";
+    //         String password = "Me@hochiminh2023";
+    //         System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+    //         try
+    //         {
+    //             //Parameters
+    //             String fromEmail = req.Query["from"]; //Sender
+    //             String bodyEmail = req.Query["body"]; //Notes
+    //             String subjectEmail = req.Query["subject"]; //"SuriTech Website-Enquiry"
+    //             String toEmail = req.Query["to"]; //To Email
+    //             var message = new MailMessage
+    //             {
+    //                 From = new MailAddress(fromEmail, subjectEmail),
+    //                 Body = bodyEmail,
+    //                 Subject = subjectEmail,
+    //                 To = { toEmail }
+    //             };
+
+    //             using (var client = new SmtpClient())
+    //             {
+    //                 client.EnableSsl = true;
+    //                 client.Host = "smtp.office365.com";
+    //                 client.Port = 587;
+    //                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
+    //                 client.Credentials = new NetworkCredential(userName, password);
+
+    //                 await client.SendMailAsync(message);
+    //             }
+    //             string responseMessage = HttpStatusCode.OK.ToString() + "Thanks!";
+    //             return new OkObjectResult(responseMessage);
+    //         }
+    //         catch (Exception ex)
+    //         {
+    //             string responseMessage = HttpStatusCode.InternalServerError.ToString();
+    //             return new OkObjectResult($"Email has not been sent: {ex.GetType()}" + responseMessage);               
+    //         }
+    //     }
+
+    // }
+
+    public class message
     {
-        [FunctionName("HttpSendMailTrigger")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+        [FunctionName("message")]
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-
-            //Credentials
-            String userName = "support@suritechs.com";
-            String password = "Me@hochiminh2023";
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            try
-            {
-                //Parameters
-                String fromEmail = req.Query["from"]; //Sender
-                String bodyEmail = req.Query["body"]; //Notes
-                String subjectEmail = req.Query["subject"]; //"SuriTech Website-Enquiry"
-                String toEmail = req.Query["to"]; //To Email
-                var message = new MailMessage
-                {
-                    From = new MailAddress(fromEmail, subjectEmail),
-                    Body = bodyEmail,
-                    Subject = subjectEmail,
-                    To = { toEmail }
-                };
-
-                using (var client = new SmtpClient())
-                {
-                    client.EnableSsl = true;
-                    client.Host = "smtp.office365.com";
-                    client.Port = 587;
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.Credentials = new NetworkCredential(userName, password);
-
-                    await client.SendMailAsync(message);
-                }
-                string responseMessage = HttpStatusCode.OK.ToString() + "Thanks!";
-                return new OkObjectResult(responseMessage);
-            }
-            catch (Exception ex)
-            {
-                string responseMessage = HttpStatusCode.InternalServerError.ToString();
-                return new OkObjectResult($"Email has not been sent: {ex.GetType()}" + responseMessage);               
-            }
+            return new OkObjectResult("Welcome to Azure Functions!" + HttpStatusCode.OK);
         }
-
-        [FunctionName("Sample1")]
-        public static async Task<IActionResult> Sample3(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
-        {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            
-            try
-            {
-                string name = req.Query["name"];
-
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject(requestBody);
-                name = name ?? data?.name;
-
-                string responseMessage = string.IsNullOrEmpty(name)
-                    ? "This HTTP triggered function Sample1 executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                    : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-                return new OkObjectResult(responseMessage);    
-                
-            }
-            catch (Exception ex)
-            {
-                string responseMessage = HttpStatusCode.InternalServerError.ToString();
-                return new OkObjectResult($"Some issue Sample1: {ex.GetType()}" + responseMessage);               
-            }
-        }
-
-    }
-
-    public static class SampleSuriTech
-    {
-        [FunctionName("Sample1")]
-        public static async Task<IActionResult> Sample1(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
-        {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            
-            try
-            {
-                string name = req.Query["name"];
-
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject(requestBody);
-                name = name ?? data?.name;
-
-                string responseMessage = string.IsNullOrEmpty(name)
-                    ? "This HTTP triggered function Sample1 executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                    : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-                return new OkObjectResult(responseMessage);    
-                
-            }
-            catch (Exception ex)
-            {
-                string responseMessage = HttpStatusCode.InternalServerError.ToString();
-                return new OkObjectResult($"Some issue Sample1: {ex.GetType()}" + responseMessage);               
-            }
-        }
-
-        [FunctionName("Sample2")]
-        public static async Task<IActionResult> Sample2(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
-        {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            
-            try
-            {
-                string name = req.Query["name"];
-
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject(requestBody);
-                name = name ?? data?.name;
-
-                string responseMessage = string.IsNullOrEmpty(name)
-                    ? "This HTTP triggered function Sample2 executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                    : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-                return new OkObjectResult(responseMessage);    
-                
-            }
-            catch (Exception ex)
-            {
-                string responseMessage = HttpStatusCode.InternalServerError.ToString();
-                return new OkObjectResult($"Some issue Sample2: {ex.GetType()}" + responseMessage);               
-            }
-        }
-
     }
 }
