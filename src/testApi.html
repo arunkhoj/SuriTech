@@ -45,8 +45,8 @@
     //mail code
     (async() => { 
 
-  const url = 'https://icy-island-0334f6b00.2.azurestaticapps.net/api/HttpSendMailTrigger?from=${frm}&id=${uid}';
-        const data = '{"from" : "arunkhoj@gmail.com", "body" : "Arun Sharma, 9167762010", "to" : "arun@suritechs.com", "subject" : "SuriTech Website-Enquiry"}';
+  const url = 'http://localhost:7071/api/Sendmail?oname=SuriTech';
+        const data = '{"sub" : "Suri Tech Support", "body" : "Need support from 9167762010", "to" : "arun@suritechs.com", "from" : "support@suritechs.com"}';
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -55,11 +55,10 @@
             body: data,
         });
 
-        //const text = await response.text();
+        const text = await response.text();
         document.getElementById('bname').innerHTML = text;      
         
     })();    
     </script>
 </body>
-
 </html>

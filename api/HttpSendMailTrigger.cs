@@ -23,68 +23,64 @@ using Newtonsoft.Json;
 
 //             return new OkObjectResult(responseMessage);
 
+//  string name = req.Query["name"];
 
+//             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+//             dynamic data = JsonConvert.DeserializeObject(requestBody);
+            
+
+//             log.LogInformation("C# HTTP trigger function processed a request.");
+//             return new OkObjectResult("Welcome to Azure Functions!" + HttpStatusCode.OK + name + data.topic + data.topic1 + data.topic3);
 
 
 namespace SuriTech.Function
 {
-    // public static class HttpSendMailTrigger
-    // {
-    //     [FunctionName("HttpSendMailTrigger")]
-    //     public static async Task<IActionResult> Run(
-    //         [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-    //         ILogger log)
-    //     {
-    //         log.LogInformation("C# HTTP trigger function processed a request.");
-
-    //         //Credentials
-    //         String userName = "support@suritechs.com";
-    //         String password = "Me@hochiminh2023";
-    //         System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-    //         try
-    //         {
-    //             //Parameters
-    //             String fromEmail = req.Query["from"]; //Sender
-    //             String bodyEmail = req.Query["body"]; //Notes
-    //             String subjectEmail = req.Query["subject"]; //"SuriTech Website-Enquiry"
-    //             String toEmail = req.Query["to"]; //To Email
-    //             var message = new MailMessage
-    //             {
-    //                 From = new MailAddress(fromEmail, subjectEmail),
-    //                 Body = bodyEmail,
-    //                 Subject = subjectEmail,
-    //                 To = { toEmail }
-    //             };
-
-    //             using (var client = new SmtpClient())
-    //             {
-    //                 client.EnableSsl = true;
-    //                 client.Host = "smtp.office365.com";
-    //                 client.Port = 587;
-    //                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
-    //                 client.Credentials = new NetworkCredential(userName, password);
-
-    //                 await client.SendMailAsync(message);
-    //             }
-    //             string responseMessage = HttpStatusCode.OK.ToString() + "Thanks!";
-    //             return new OkObjectResult(responseMessage);
-    //         }
-    //         catch (Exception ex)
-    //         {
-    //             string responseMessage = HttpStatusCode.InternalServerError.ToString();
-    //             return new OkObjectResult($"Email has not been sent: {ex.GetType()}" + responseMessage);               
-    //         }
-    //     }
-
-    // }
-
-    public class message
+    public class Sendmail
     {
-        [FunctionName("message")]
+        [FunctionName("Sendmail")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-            return new OkObjectResult("Welcome to Azure Functions!" + HttpStatusCode.OK);
+            // Read query string
+            string orgname = req.Query["oname"];
+
+            // Read body json
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            //orgname + data.sub + data.body + data.to + data.from
+            try
+            {
+                String userName = "support@suritechs.com";
+                String password = "Sector84@vietngocman2023";
+
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var message = new MailMessage
+                {
+                    From = new MailAddress("support@suritechs.com", orgname), //("support@suritechs.com", "Suri Support")
+                    Body = data.body.ToString(),
+                    Subject = data.sub.ToString(),
+                    To = { data.to.ToString() }
+                    //CC = {"arunkhoj@gmail.com"}
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    client.EnableSsl = true;
+                    client.Host = "smtp.office365.com";
+                    client.Port = 587;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.Credentials = new NetworkCredential(userName, password);
+
+                    await client.SendMailAsync(message);
+                }
+                string responseMessage = HttpStatusCode.OK.ToString() + " Thanks!";
+                return new OkObjectResult(responseMessage);
+            }
+            catch(Exception ex)
+            {
+                string responseMessage = HttpStatusCode.InternalServerError.ToString();
+                return new OkObjectResult($"Email has not been sent: {ex.GetType()} " + responseMessage);
+            }
         }
     }
 }
